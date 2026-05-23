@@ -70,21 +70,21 @@ const initialProducts: Product[] = [
   {
     id: 8,
     name: 'Fairyy',
-    price: 'Rs 1500',
+    price: 'Rs 1,500',
     category: 'Necklaces',
     image: 'https://i5.walmartimages.com/asr/28bf5b7a-8723-4207-af88-4094fe428402.a678335e1582f1f1680af938992da07a.jpeg'
   },
   {
     id: 9,
     name: "Swarovski",
-    price: 'Rs 2000',
+    price: 'Rs 2,000',
     category: 'necklaces',
     image: 'https://tanysjewellery.com/cdn/shop/files/4_11010653-80b8-4bdf-b231-cca4dba5cbbe_1200x1200.jpg?v=1737228421'
   },
   {
     id: 10,
     name: "Nari's B",
-    price: 'Rs 1700',
+    price: 'Rs 1,700',
     category: 'Bracelets',
     image: 'https://michaelgabriels.com/cdn/shop/files/14ct_round_tennis_bracelet_michaelgabriels.jpg?v=1772669345'
   },
