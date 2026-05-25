@@ -15,7 +15,7 @@ const Story: React.FC = () => {
           >
             <div className="aspect-square w-full max-w-md bg-pearl/5 border border-gold/20 p-8">
               <div className="w-full h-full bg-gradient-to-tr from-emerald-deep to-pearl/10 flex items-center justify-center">
-                <span className="text-gold/20 text-8xl font-display italic">2026</span>
+                <span className="text-gold/20 text-7xl font-display italic">NARI</span>
               </div>
             </div>
             <motion.div
@@ -25,7 +25,12 @@ const Story: React.FC = () => {
               transition={{ duration: 1.2, delay: 0.5 }}
               className="absolute -bottom-10 -right-10 w-64 h-80 bg-gold/10 backdrop-blur-xl border border-gold/30 p-4 hidden md:block"
             >
-              <div className="w-full h-full border border-gold/10" />
+              <div className="w-full h-full border border-gold/10" >
+                <div className="w-full h-full bg-gradient-to-tr from-emerald-deep to-pearl/10 flex items-center justify-center">
+                  <span className="text-gold/20 text-6xl font-display italic">2025</span>
+                </div>
+              </div>
+
             </motion.div>
           </motion.div>
 
@@ -37,7 +42,7 @@ const Story: React.FC = () => {
           >
             <span className="text-xs tracking-[0.5em] uppercase text-gold mb-6 block">Our Heritage</span>
             <h2 className="text-5xl md:text-7xl font-display font-bold mb-8 leading-tight">
-              A Century of <br />
+              A Collection of <br />
               <span className="italic font-normal text-gold">Pure Brilliance</span>
             </h2>
             <div className="space-y-6 text-pearl/70 text-lg font-light leading-relaxed">

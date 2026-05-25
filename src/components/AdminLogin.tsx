@@ -44,7 +44,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
         className="w-full max-w-md relative z-10"
       >
         <div className="text-center mb-12">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -57,7 +57,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
 
         <div className="glass-card border-gold/20 p-8 md:p-10 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1 h-full bg-gold/50" />
-          
+
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-2">
               <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Registry Username</label>
@@ -75,7 +75,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Access Cipher</label>
+              <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Access Password</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/40" size={18} />
                 <input
@@ -91,7 +91,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
 
             <AnimatePresence>
               {error && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
@@ -122,7 +122,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
           </form>
 
           <div className="mt-10 flex items-center justify-between border-t border-gold/10 pt-8">
-            <button 
+            <button
               onClick={onBack}
               className="text-[10px] uppercase tracking-[0.2em] text-pearl/40 hover:text-gold transition-colors"
             >
@@ -135,7 +135,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
           </div>
         </div>
 
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}

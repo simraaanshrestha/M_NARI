@@ -31,7 +31,7 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
         paymentMethod: paymentMethod,
         paymentStatus: paymentMethod === 'esewa' ? 'Paid' : 'Pending'
       });
-      
+
       setIsSuccess(true);
       setTimeout(() => {
         clearCart();
@@ -54,7 +54,7 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
             onClick={onClose}
             className="absolute inset-0 bg-emerald-deep/80 backdrop-blur-md"
           />
-          
+
           <motion.div
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -67,14 +67,14 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
 
             {isSuccess ? (
               <div className="text-center py-12">
-                <motion.div 
+                <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-gold/30"
                 >
                   <ShieldCheck className="text-gold" size={40} />
                 </motion.div>
-                <h2 className="text-3xl font-display font-bold text-pearl mb-4 italic">Acquisition Confirmed</h2>
+                <h2 className="text-3xl font-display font-bold text-pearl mb-4 italic">Payment Confirmed</h2>
                 <p className="text-pearl/60 font-light">Thank you, {customerInfo.name.split(' ')[0]}. Your NARI piece is being prepared.</p>
               </div>
             ) : (
@@ -86,19 +86,19 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
                     <div className={`h-1 w-8 rounded-full ${step === 2 ? 'bg-gold' : 'bg-gold/20'}`} />
                   </div>
                 </div>
-                
+
                 {step === 1 ? (
                   <form onSubmit={handleNext} className="space-y-6">
                     <div className="space-y-2">
                       <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Full Name</label>
                       <div className="relative">
                         <User className="absolute left-4 top-4 text-gold/40" size={18} />
-                        <input 
+                        <input
                           required
                           value={customerInfo.name}
-                          onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
-                          type="text" 
-                          placeholder="Ex: Maya Sharma"
+                          onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
+                          type="text"
+                          placeholder="Ex: Your Name"
                           className="w-full bg-white/5 border border-gold/20 p-4 pl-12 text-pearl placeholder:text-pearl/20 focus:border-gold outline-none transition-colors"
                         />
                       </div>
@@ -108,11 +108,11 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
                       <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Contact Number</label>
                       <div className="relative">
                         <Phone className="absolute left-4 top-4 text-gold/40" size={18} />
-                        <input 
+                        <input
                           required
                           value={customerInfo.phone}
-                          onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
-                          type="phone" 
+                          onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
+                          type="telephone"
                           placeholder="+977 98XXXXXXXX"
                           className="w-full bg-white/5 border border-gold/20 p-4 pl-12 text-pearl placeholder:text-pearl/20 focus:border-gold outline-none transition-colors"
                         />
@@ -123,11 +123,12 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
                       <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Delivery Address</label>
                       <div className="relative">
                         <MapPin className="absolute left-4 top-4 text-gold/40" size={18} />
-                        <textarea 
+                        <textarea
                           required
                           value={customerInfo.address}
-                          onChange={(e) => setCustomerInfo({...customerInfo, address: e.target.value})}
-                          placeholder="Street, City, Area"
+                          onChange={(e) => setCustomerInfo({ ...customerInfo, address: e.target.value })}
+                          placeholder="Street, City, Area 
+(Detailed Location for Delivery)"
                           rows={3}
                           className="w-full bg-white/5 border border-gold/20 p-4 pl-12 text-pearl placeholder:text-pearl/20 focus:border-gold outline-none transition-colors resize-none"
                         />
@@ -142,8 +143,8 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
                   <form onSubmit={handlePayment} className="space-y-8">
                     <div className="space-y-4">
                       <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Select Payment Method</label>
-                      
-                      <div 
+
+                      <div
                         onClick={() => setPaymentMethod('cod')}
                         className={`p-6 border cursor-pointer transition-all flex items-center justify-between ${paymentMethod === 'cod' ? 'border-gold bg-gold/5' : 'border-gold/10 bg-white/5 hover:border-gold/30'}`}
                       >
@@ -157,14 +158,14 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
                         <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'cod' ? 'border-gold bg-gold' : 'border-gold/20'}`} />
                       </div>
 
-                      <div 
+                      <div
                         onClick={() => setPaymentMethod('esewa')}
                         className={`p-6 border cursor-pointer transition-all flex items-center justify-between ${paymentMethod === 'esewa' ? 'border-gold bg-gold/5' : 'border-gold/10 bg-white/5 hover:border-gold/30'}`}
                       >
                         <div className="flex items-center gap-4">
                           <Smartphone className={paymentMethod === 'esewa' ? 'text-gold' : 'text-pearl/40'} />
                           <div>
-                            <p className="text-pearl text-sm font-medium">eSewa Wallet</p>
+                            <p className="text-pearl text-sm font-medium">E-sewa Wallet</p>
                             <p className="text-[10px] text-pearl/40 uppercase tracking-widest">Instant Digital Payment</p>
                           </div>
                         </div>
@@ -177,9 +178,9 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
                         <span className="text-pearl/40 uppercase tracking-[0.2em] text-[10px]">Grand Total</span>
                         <span className="text-3xl font-display font-bold text-gold">Rs {totalPrice.toLocaleString()}</span>
                       </div>
-                      
+
                       <div className="flex gap-4">
-                        <button 
+                        <button
                           type="button"
                           onClick={() => setStep(1)}
                           className="flex-1 py-4 border border-gold/20 text-gold text-xs uppercase tracking-widest hover:bg-white/5 transition-colors"
@@ -196,7 +197,7 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
 
                 <div className="mt-8 flex items-center justify-center gap-2 text-[8px] uppercase tracking-[0.2em] text-pearl/20">
                   <ShieldCheck size={12} />
-                  <span>Verified Bespoke Transaction</span>
+                  <span>Verified Transaction</span>
                 </div>
               </>
             )}

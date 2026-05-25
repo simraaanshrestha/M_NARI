@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProducts, type Product } from '../context/ProductContext';
 import { useOrders, type Order } from '../context/OrderContext';
-import { Package, IndianRupee, Plus, Trash2, ChevronLeft, LayoutDashboard, History, Image as ImageIcon, Edit3, X, User, Phone, MapPin, CreditCard, CheckCircle2, Clock, Smartphone } from 'lucide-react';
+import { Package, IndianRupee, Plus, Trash2, ChevronLeft, LayoutDashboard, History, Image as ImageIcon, Edit3, X, User, Phone, MapPin, CreditCard, CheckCircle2, Clock, Smartphone, LogOut, AlertTriangle } from 'lucide-react';
 
 const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
@@ -11,13 +11,14 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [formData, setFormData] = useState({ name: '', price: '', category: 'Rings', image: '' });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.price) return;
 
-    const formattedPrice = formData.price.startsWith('Rs') 
-      ? formData.price 
+    const formattedPrice = formData.price.startsWith('Rs')
+      ? formData.price
       : `Rs ${formData.price.trim()}`;
 
     if (editingId) {
@@ -32,11 +33,11 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
   const startEdit = (product: Product) => {
     setEditingId(product.id);
-    setFormData({ 
-      name: product.name, 
-      price: product.price.replace('Rs ', ''), 
-      category: product.category, 
-      image: product.image 
+    setFormData({
+      name: product.name,
+      price: product.price.replace('Rs ', ''),
+      category: product.category,
+      image: product.image
     });
   };
 
@@ -51,23 +52,26 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     <div className="min-h-screen bg-emerald-deep text-pearl font-sans">
       <nav className="border-b border-gold/10 px-8 py-6 flex justify-between items-center bg-emerald-deep/50 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-6">
-          <button onClick={onBack} className="p-2 hover:bg-white/5 rounded-full text-gold transition-colors">
-            <ChevronLeft size={24} />
-          </button>
           <h1 className="text-2xl font-display font-bold tracking-widest italic text-gold">NARI ADMIN</h1>
         </div>
         <div className="flex gap-4">
-          <button 
+          <button
             onClick={() => setActiveTab('inventory')}
             className={`flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-widest transition-all ${activeTab === 'inventory' ? 'bg-gold text-white' : 'hover:bg-white/5 text-pearl/60'}`}
           >
             <Package size={16} /> Inventory
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('sales')}
             className={`flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-widest transition-all ${activeTab === 'sales' ? 'bg-gold text-white' : 'hover:bg-white/5 text-pearl/60'}`}
           >
             <History size={16} /> Sales
+          </button>
+          <button
+            onClick={() => setShowLogoutConfirm(true)}
+            className="flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-widest transition-all hover:bg-red-500/10 text-red-400 border border-transparent hover:border-red-500/20"
+          >
+            <LogOut size={16} /> Logout
           </button>
         </div>
       </nav>
@@ -75,14 +79,14 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       <main className="container mx-auto px-6 py-12">
         {activeTab === 'inventory' ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               className="lg:col-span-1 glass-card border-gold/20"
             >
               <div className="flex justify-between items-center mb-8">
                 <h2 className="text-xl font-display font-bold text-gold italic flex items-center gap-3">
-                  {editingId ? <Edit3 size={20} /> : <Plus size={20} />} 
+                  {editingId ? <Edit3 size={20} /> : <Plus size={20} />}
                   {editingId ? 'Edit Piece' : 'Add New Piece'}
                 </h2>
                 {editingId && (
@@ -94,21 +98,21 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Product Name</label>
-                  <input 
+                  <input
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    type="text" 
-                    placeholder="e.g. Royal Emerald Ring" 
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    type="text"
+                    placeholder="e.g. Royal Emerald Ring"
                     className="w-full bg-white/5 border border-gold/20 p-4 text-pearl focus:border-gold outline-none transition-colors"
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Price (Rs)</label>
-                  <input 
+                  <input
                     value={formData.price}
-                    onChange={(e) => setFormData({...formData, price: e.target.value})}
-                    type="text" 
-                    placeholder="15,000" 
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    type="text"
+                    placeholder="15,000"
                     className="w-full bg-white/5 border border-gold/20 p-4 text-pearl focus:border-gold outline-none transition-colors"
                   />
                 </div>
@@ -116,20 +120,20 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Image URL (Optional)</label>
                   <div className="relative">
                     <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/40" size={18} />
-                    <input 
+                    <input
                       value={formData.image}
-                      onChange={(e) => setFormData({...formData, image: e.target.value})}
-                      type="text" 
-                      placeholder="https://unsplash.com/..." 
+                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                      type="text"
+                      placeholder="https://unsplash.com/..."
                       className="w-full bg-white/5 border border-gold/10 p-4 pl-12 text-pearl focus:border-gold outline-none transition-colors"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Category</label>
-                  <select 
+                  <select
                     value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     className="w-full bg-white/5 border border-gold/20 p-4 text-pearl focus:border-gold outline-none transition-colors appearance-none"
                   >
                     <option value="Rings">Rings</option>
@@ -148,7 +152,7 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               <h2 className="text-xl font-display font-bold text-pearl mb-8 italic">Current Collection ({products.length})</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {products.map((product) => (
-                  <motion.div 
+                  <motion.div
                     layout
                     key={product.id}
                     className={`flex justify-between items-center p-4 border ${editingId === product.id ? 'border-gold bg-gold/5' : 'border-gold/10 bg-white/5'} group hover:border-gold/40 transition-colors`}
@@ -163,13 +167,13 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <button 
+                      <button
                         onClick={() => startEdit(product)}
                         className="p-2 text-pearl/20 hover:text-gold transition-colors"
                       >
                         <Edit3 size={18} />
                       </button>
-                      <button 
+                      <button
                         onClick={() => removeProduct(product.id)}
                         className="p-2 text-pearl/20 hover:text-red-400 transition-colors"
                       >
@@ -182,7 +186,7 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             </div>
           </div>
         ) : (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-12"
@@ -228,8 +232,8 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                       </tr>
                     ) : (
                       orders.map((order) => (
-                        <tr 
-                          key={order.id} 
+                        <tr
+                          key={order.id}
                           onClick={() => setSelectedOrder(order)}
                           className="hover:bg-white/5 transition-colors cursor-pointer group"
                         >
@@ -264,15 +268,15 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               onClick={() => setSelectedOrder(null)}
               className="absolute inset-0 bg-emerald-deep/80 backdrop-blur-md"
             />
-            
+
             <motion.div
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               className="relative w-full max-w-2xl bg-emerald-deep border border-gold/20 shadow-2xl overflow-hidden"
             >
-              <button 
-                onClick={() => setSelectedOrder(null)} 
+              <button
+                onClick={() => setSelectedOrder(null)}
                 className="absolute top-6 right-6 text-gold/60 hover:text-gold z-10"
               >
                 <X size={24} />
@@ -297,7 +301,7 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                         ))}
                       </div>
                     </div>
-                    
+
                     <div className="pt-6 border-t border-gold/10 flex justify-between items-end">
                       <span className="text-[10px] uppercase tracking-[0.2em] text-pearl/40">Acquisition Total</span>
                       <span className="text-2xl font-display font-bold text-gold">Rs {selectedOrder.total.toLocaleString()}</span>
@@ -344,6 +348,49 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Logout Confirmation Modal */}
+      <AnimatePresence>
+        {showLogoutConfirm && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowLogoutConfirm(false)}
+              className="absolute inset-0 bg-emerald-deep/80 backdrop-blur-md"
+            />
+
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="relative w-full max-w-sm glass-card border-red-500/20 p-8 text-center"
+            >
+              <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <AlertTriangle size={32} className="text-red-400" />
+              </div>
+              <h2 className="text-xl font-display font-bold text-pearl mb-2 italic">Confirm Logout</h2>
+              <p className="text-xs text-pearl/40 mb-8 uppercase tracking-widest">Are you sure you want to Log Out?</p>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="flex-1 py-3 text-[10px] uppercase tracking-widest text-pearl/60 hover:text-pearl transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={onBack}
+                  className="flex-1 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-400 text-[10px] uppercase tracking-widest border border-red-500/20 transition-all"
+                >
+                  Logout
+                </button>
               </div>
             </motion.div>
           </div>

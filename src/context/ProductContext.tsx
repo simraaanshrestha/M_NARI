@@ -50,7 +50,7 @@ const initialProducts: Product[] = [
     id: 5,
     name: 'Royal Luxě',
     price: 'Rs 12,400',
-    category: 'Earrings',
+    category: 'Rings',
     image: 'https://www.caratdiamonds.com/cdn/shop/files/IMG_20251206_111610cc.jpg?v=1765194032'
   },
   {
