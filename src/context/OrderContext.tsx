@@ -10,7 +10,7 @@ export interface Order {
     phone: string;
     address: string;
   };
-  paymentMethod: 'cod' | 'esewa';
+  paymentMethod: 'cod' | 'esewa' | 'stripe';
   paymentStatus: 'Pending' | 'Paid';
 }
 

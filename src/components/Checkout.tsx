@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShieldCheck, User, Phone, MapPin, Truck, Smartphone } from 'lucide-react';
+import { X, ShieldCheck, User, Phone, MapPin, Truck, Smartphone, CreditCard } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useOrders } from '../context/OrderContext';
+import StripePayment from './StripePayment';
 
 const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const { totalPrice, clearCart, cartItems } = useCart();
   const { addOrder } = useOrders();
   const [step, setStep] = useState<1 | 2>(1);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'esewa'>('cod');
+  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'esewa' | 'stripe'>('cod');
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     phone: '',
@@ -21,25 +22,31 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
     setStep(2);
   };
 
-  const handlePayment = (e: React.FormEvent) => {
-    e.preventDefault();
-    setTimeout(() => {
-      addOrder({
-        items: cartItems.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })),
-        total: totalPrice,
-        customer: customerInfo,
-        paymentMethod: paymentMethod,
-        paymentStatus: paymentMethod === 'esewa' ? 'Paid' : 'Pending'
-      });
+  const finalizeOrder = () => {
+    addOrder({
+      items: cartItems.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })),
+      total: totalPrice,
+      customer: customerInfo,
+      paymentMethod: paymentMethod,
+      paymentStatus: (paymentMethod === 'esewa' || paymentMethod === 'stripe') ? 'Paid' : 'Pending'
+    });
 
-      setIsSuccess(true);
-      setTimeout(() => {
-        clearCart();
-        onClose();
-        setIsSuccess(false);
-        setStep(1);
-        setCustomerInfo({ name: '', phone: '', address: '' });
-      }, 3000);
+    setIsSuccess(true);
+    setTimeout(() => {
+      clearCart();
+      onClose();
+      setIsSuccess(false);
+      setStep(1);
+      setCustomerInfo({ name: '', phone: '', address: '' });
+    }, 3000);
+  };
+
+  const handlePayment = (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) e.preventDefault();
+    if (paymentMethod === 'stripe') return; // Stripe has its own handler
+
+    setTimeout(() => {
+      finalizeOrder();
     }, 1500);
   };
 
@@ -140,7 +147,7 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
                     </button>
                   </form>
                 ) : (
-                  <form onSubmit={handlePayment} className="space-y-8">
+                  <div className="space-y-8">
                     <div className="space-y-4">
                       <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60">Select Payment Method</label>
 
@@ -171,6 +178,20 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
                         </div>
                         <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'esewa' ? 'border-gold bg-gold' : 'border-gold/20'}`} />
                       </div>
+
+                      <div
+                        onClick={() => setPaymentMethod('stripe')}
+                        className={`p-6 border cursor-pointer transition-all flex items-center justify-between ${paymentMethod === 'stripe' ? 'border-gold bg-gold/5' : 'border-gold/10 bg-white/5 hover:border-gold/30'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <CreditCard className={paymentMethod === 'stripe' ? 'text-gold' : 'text-pearl/40'} />
+                          <div>
+                            <p className="text-pearl text-sm font-medium">Stripe (Card)</p>
+                            <p className="text-[10px] text-pearl/40 uppercase tracking-widest">International Payments</p>
+                          </div>
+                        </div>
+                        <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'stripe' ? 'border-gold bg-gold' : 'border-gold/20'}`} />
+                      </div>
                     </div>
 
                     <div className="pt-6 border-t border-gold/10">
@@ -179,20 +200,37 @@ const Checkout: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, 
                         <span className="text-3xl font-display font-bold text-gold">Rs {totalPrice.toLocaleString()}</span>
                       </div>
 
-                      <div className="flex gap-4">
-                        <button
-                          type="button"
-                          onClick={() => setStep(1)}
-                          className="flex-1 py-4 border border-gold/20 text-gold text-xs uppercase tracking-widest hover:bg-white/5 transition-colors"
-                        >
-                          Back
-                        </button>
-                        <button type="submit" className="flex-[2] btn-gold">
-                          {paymentMethod === 'esewa' ? 'Pay via eSewa' : 'Confirm Order'}
-                        </button>
-                      </div>
+                      {paymentMethod === 'stripe' ? (
+                        <div className="space-y-4">
+                          <StripePayment totalAmount={totalPrice} onPaymentSuccess={finalizeOrder} />
+                          <button
+                            type="button"
+                            onClick={() => setStep(1)}
+                            className="w-full py-4 border border-gold/20 text-gold text-xs uppercase tracking-widest hover:bg-white/5 transition-colors"
+                          >
+                            Back
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex gap-4">
+                          <button
+                            type="button"
+                            onClick={() => setStep(1)}
+                            className="flex-1 py-4 border border-gold/20 text-gold text-xs uppercase tracking-widest hover:bg-white/5 transition-colors"
+                          >
+                            Back
+                          </button>
+                          <button 
+                            type="button"
+                            onClick={handlePayment}
+                            className="flex-[2] btn-gold"
+                          >
+                            {paymentMethod === 'esewa' ? 'Pay via eSewa' : 'Confirm Order'}
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  </form>
+                  </div>
                 )}
 
                 <div className="mt-8 flex items-center justify-center gap-2 text-[8px] uppercase tracking-[0.2em] text-pearl/20">

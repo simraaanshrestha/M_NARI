@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProducts, type Product } from '../context/ProductContext';
 import { useOrders, type Order } from '../context/OrderContext';
-import { Package, IndianRupee, Plus, Trash2, ChevronLeft, LayoutDashboard, History, Image as ImageIcon, Edit3, X, User, Phone, MapPin, CreditCard, CheckCircle2, Clock, Smartphone, LogOut, AlertTriangle } from 'lucide-react';
+import { Package, IndianRupee, Plus, Trash2, LayoutDashboard, History, Image as ImageIcon, Edit3, X, User, Phone, MapPin, CreditCard, CheckCircle2, Clock, Smartphone, LogOut, AlertTriangle, Truck } from 'lucide-react';
 
 const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
@@ -57,7 +57,7 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <div className="flex gap-4">
           <button
             onClick={() => setActiveTab('inventory')}
-            className={`flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-widest transition-all ${activeTab === 'inventory' ? 'bg-gold text-white' : 'hover:bg-white/5 text-pearl/60'}`}
+            className={`flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-wide=poiuy-ijst transition-all ${activeTab === 'inventory' ? 'bg-gold text-white' : 'hover:bg-white/5 text-pearl/60'}`}
           >
             <Package size={16} /> Inventory
           </button>
@@ -334,10 +334,28 @@ const AdminPanel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                       <label className="text-[10px] uppercase tracking-[0.2em] text-gold/60 mb-4 block">Payment Intelligence</label>
                       <div className={`p-4 border rounded-none flex items-center justify-between ${(selectedOrder.paymentStatus || 'Pending') === 'Paid' ? 'border-emerald-light/20 bg-emerald-light/5' : 'border-gold/20 bg-gold/5'}`}>
                         <div className="flex items-center gap-3">
-                          {selectedOrder.paymentMethod === 'esewa' ? <Smartphone size={20} className="text-gold" /> : <CreditCard size={20} className="text-gold" />}
+                          {selectedOrder.paymentMethod === 'esewa' ? (
+                            <Smartphone size={20} className="text-gold" />
+                          ) : selectedOrder.paymentMethod === 'stripe' ? (
+                            <CreditCard size={20} className="text-gold" />
+                          ) : (
+                            <Truck size={20} className="text-gold" />
+                          )}
                           <div className="flex flex-col">
-                            <span className="text-pearl text-xs font-bold uppercase tracking-widest">{selectedOrder.paymentMethod === 'esewa' ? 'eSewa Wallet' : 'Cash on Delivery'}</span>
-                            <span className="text-[10px] text-pearl/40 uppercase tracking-widest">{selectedOrder.paymentMethod === 'esewa' ? 'Instant Digital' : 'Physical Transfer'}</span>
+                            <span className="text-pearl text-xs font-bold uppercase tracking-widest">
+                              {selectedOrder.paymentMethod === 'esewa' 
+                                ? 'eSewa Wallet' 
+                                : selectedOrder.paymentMethod === 'stripe'
+                                ? 'Stripe (Card)'
+                                : 'Cash on Delivery'}
+                            </span>
+                            <span className="text-[10px] text-pearl/40 uppercase tracking-widest">
+                              {selectedOrder.paymentMethod === 'esewa' 
+                                ? 'Instant Digital' 
+                                : selectedOrder.paymentMethod === 'stripe'
+                                ? 'International Card'
+                                : 'Physical Transfer'}
+                            </span>
                           </div>
                         </div>
                         <div className="flex flex-col items-end">
